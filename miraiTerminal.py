@@ -1,5 +1,5 @@
 from loginMirai import loginMirai,checkWords
-from basicFunc import turnOnPlugin
+from basicFunc import sendGroupMessage, sendMessage, turnOnPlugin
 import json
 from basicFunc import getList
 import re
@@ -36,6 +36,10 @@ def pickDealFunc( ):
         turnOnPlugin(order_split)
     elif order_split[0] == "getlist":
         getList()
+    elif order_split[0] == "sendf":
+        sendMessage(order_split)
+    elif order_split[0] == "sendg":
+        sendGroupMessage(order_split)
     else:
         default()
 
