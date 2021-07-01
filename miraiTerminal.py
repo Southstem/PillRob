@@ -49,5 +49,7 @@ def mainTerminal():
         markLine()
         orderHere = input()
     print("\n   Thanks for using.")
+    with open("status.json",'w') as f:
+        f.truncate()
 
 mainTerminal()
