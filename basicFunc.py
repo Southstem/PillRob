@@ -1,7 +1,14 @@
 import json
 import requests
 from loginMirai import checkWords
-urlBase = "http://175.24.37.72:8080"
+global urlBase
+urlBase = ""
+with open("config.json",'r') as f:
+    res = json.load(f)
+    if checkWords(res,'url'):
+         urlBase = res['url']+":"+res['port']
+    else:
+        print('[ Func ] ERROR!')
 
 def getSession():
     with open("status.json") as jf:
@@ -17,13 +24,13 @@ def  getFriendList():
     sessionVal = getSession()
     if sessionVal != None and sessionVal != "":
         print('[ Getlist ] request session = ' + sessionVal)
-        url = "http://175.24.37.72:8080/friendList?sessionKey=" + sessionVal
+        url = urlBase+"/friendList?sessionKey=" + sessionVal
         res = json.loads(requests.get(url=url).text)
         print('[ Getlist ] Here are your friends in your list : ')
         for i in res:
             print('  -->  '+i['nickname'])
 
-        url = "http://175.24.37.72:8080/friendList?session="
+        url = urlBase+"/friendList?session="
     else:
         print('[ Getlist ] session information error ! Please login first ...')
 
@@ -31,13 +38,13 @@ def  getGroupList():
     sessionVal = getSession()
     if sessionVal != None and sessionVal != "":
         print('[ Getlist ] request session = ' + sessionVal)
-        url = "http://175.24.37.72:8080/groupList?sessionKey=" + sessionVal
+        url = urlBase+"/groupList?sessionKey=" + sessionVal
         res = json.loads(requests.get(url=url).text)
         print('[ Getlist ] Here are your groups in your list : ')
         for i in res:
             print('  -->  '+i['name'])
 
-        url = "http://175.24.37.72:8080/friendList?session="
+        url = urlBase+"/friendList?session="
     else:
         print('[ Getlist ] session information error ! Please login first ...')
 
@@ -65,7 +72,7 @@ def sendMessage(order):
                 {"type" : "Plain","text" : str}
             ]
         }
-        url = "http://175.24.37.72:8080/sendFriendMessage"
+        url = urlBase+"/sendFriendMessage"
         res = requests.post(url = url,data = json.dumps(dataSend)).text
         print('[ SendF ] Sending status : '+ json.loads(res)['msg'])
         return 
@@ -93,6 +100,9 @@ def sendGroupMessage(order):
         print('[ SendG ] Sending status : '+json.loads(res)['msg'])
         return
     print('[ SendG ] Send Error ! ')
+
+
+
 
 # def addFriend(order):
 #     qNumb = order[1]

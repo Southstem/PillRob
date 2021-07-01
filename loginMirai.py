@@ -1,6 +1,8 @@
 from os import write
 import requests
 import json
+global urlbase
+urlbase = ""
 
 def checkWords( res, words ):
     for i in res.keys():
@@ -8,8 +10,15 @@ def checkWords( res, words ):
             return True
     return False
 
+with open("config.json",'r') as f:
+    res = json.load(f)
+    if checkWords(res,'url'):
+         urlbase = res['url']+":"+res['port']
+    else:
+        print('[ Login ] ERROR!')
+
 def bindMirai(session, qNumb):
-    url_session = "http://175.24.37.72:8080/verify"
+    url_session = urlbase + "/verify"
     data_session = '{ "sessionKey" : "' + session + '","qq" : ' + qNumb + '}'
     res = json.loads(requests.post(url = url_session,data = data_session).text)
     if checkWords(res, 'code'):
@@ -30,7 +39,7 @@ def loginMirai( order ):
         authKey = order[1]
         qNumb = order[2]
     print( '[ Login ] The authKey you have inputed is ' + authKey)
-    url_auth = "http://175.24.37.72:8080/auth"
+    url_auth = urlbase + "/auth"
     if authKey == "" or authKey == None:
         print('[ Login ] Default authKey : PillRob2021')
         authKey = 'PillRob2021'
